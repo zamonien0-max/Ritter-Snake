@@ -445,7 +445,7 @@ function drawGameOver() {
 
   drawText("GAME OVER", width / 2, height / 2 - 70, 64, BOLD);
   drawText("Punkte: " + score, width / 2, height / 2, 32, NORMAL);
-  drawText("ENTER zum Neustarten", width / 2, height / 2 + 70, 26, NORMAL);
+  drawText("TIPPE ZUM NEUSTARTEN", width / 2, height / 2 + 70, 26, NORMAL);
 
   // Button: Zur Sortenauswahl
   let b = getMenuButtonBounds();
