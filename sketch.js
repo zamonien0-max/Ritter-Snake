@@ -838,8 +838,8 @@ function drawFood() {
     chocolate,
     fieldX + food.x * gridSize + 3,
     fieldY + food.y * gridSize + 3,
-    gridSize - 6,
-    gridSize - 6
+    gridSize - 2,
+    gridSize - 2
   );
 }
 
