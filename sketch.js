@@ -101,8 +101,9 @@ let imagesLoaded = false;
 const cols = 18;
 const rows = 32;
 const gridSize = 50;
+const headerH = 100;
+
 const fieldX = 90;
-const headerH = 120;
 const fieldY = headerH;
 const fieldW = cols * gridSize; // 900 px
 const fieldH = rows * gridSize; // 1600 px
