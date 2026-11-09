@@ -77,9 +77,19 @@ let particles = [];
 let chocolateImages = [];
 let imagesLoaded = false;
 
-const gridSize = 60;
+// Spielfeld: nach innen verschoben, damit oben Platz für den HUD-Balken bleibt
+const gridSize = 50;
 const cols = 18;
 const rows = 32;
+
+const fieldX = 90;
+const fieldY = 260;
+
+const frameX = 60;
+const frameY = 230;
+const frameW = 960;
+const frameH = 1660;
+const headerH = 150;
 
 let direction;
 let nextDirection;
@@ -183,6 +193,7 @@ function draw() {
     moveSnake();
   }
 
+  drawGameFrame();
   drawFood();
   drawSnake();
   drawChocolateParticles();
@@ -434,8 +445,28 @@ function setupTouchInput() {
   });
 }
 
+function drawGameFrame() {
+  const style = flavorSettings[selectedFlavor];
+
+  push();
+  noFill();
+  stroke(style.body);
+  strokeWeight(12);
+  rect(frameX, frameY, frameW, frameH);
+  pop();
+}
+
 function drawScore() {
-  drawText("Punkte: " + score, 30, 30, 32, BOLD, "#ffffff", LEFT);
+  const style = flavorSettings[selectedFlavor];
+
+  // Durchgehender Farbbalken über die gesamte Canvas-Breite
+  push();
+  noStroke();
+  fill(style.body);
+  rect(0, 0, width, headerH);
+  pop();
+
+  drawText("Punkte: " + score, 30, headerH / 2, 48, BOLD, "#ffffff", LEFT);
 }
 
 function drawGameOver() {
@@ -464,7 +495,7 @@ function getMenuButtonBounds() {
 function getIconBounds() {
   let size = 90;
   let margin = 30;
-  return { x: width - size - margin, y: margin, w: size, h: size };
+  return { x: width - size - margin, y: (headerH - size) / 2, w: size, h: size };
 }
 
 function drawBackIcon() {
@@ -583,8 +614,8 @@ function keyPressed() {
 // ------------------------------------
 
 function createChocolateParticles(gridX, gridY, type) {
-  let centerX = gridX * gridSize + gridSize / 2;
-  let centerY = gridY * gridSize + gridSize / 2;
+  let centerX = fieldX + gridX * gridSize + gridSize / 2;
+  let centerY = fieldY + gridY * gridSize + gridSize / 2;
 
   let chocolateColor = type === 0 ? "#39221b" : "#a96b43";
 
@@ -703,8 +734,8 @@ function drawSnake() {
 
   for (let i = snake.length - 1; i >= 1; i--) {
     let segment = snake[i];
-    let x = segment.x * gridSize;
-    let y = segment.y * gridSize;
+    let x = fieldX + segment.x * gridSize;
+    let y = fieldY + segment.y * gridSize;
 
     fill(style.body);
     rect(x + 3, y + 3, gridSize - 6, gridSize - 6, 10);
@@ -713,8 +744,8 @@ function drawSnake() {
   }
 
   let head = snake[0];
-  let hx = head.x * gridSize;
-  let hy = head.y * gridSize;
+  let hx = fieldX + head.x * gridSize;
+  let hy = fieldY + head.y * gridSize;
 
   fill(style.head);
   rect(hx + 2, hy + 2, gridSize - 4, gridSize - 4, 12);
@@ -819,8 +850,8 @@ function drawFood() {
 
   image(
     chocolate,
-    food.x * gridSize + 3,
-    food.y * gridSize + 3,
+    fieldX + food.x * gridSize + 3,
+    fieldY + food.y * gridSize + 3,
     gridSize - 6,
     gridSize - 6
   );
