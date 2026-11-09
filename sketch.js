@@ -107,19 +107,19 @@ let gameOverTime = 0;
     chocolateImages[0] = img;
     loadedAssets++;
     checkImagesLoaded();
-  }, () => console.error("Bild nicht gefunden: dunkle Schoki.png"));
+}, () => loadFail("schoki-dunkel.png"));
 
   loadImage("schoki-vollmilch.png", img => {
     chocolateImages[1] = img;
     loadedAssets++;
     checkImagesLoaded();
-  }, () => console.error("Bild nicht gefunden: Vollmilchstück.png"));
+}, () => loadFail("schoki-vollmilch.png"));
 
   loadImage("schoki-weiss.png", img => {
     chocolateImages[2] = img;
     loadedAssets++;
     checkImagesLoaded();
-  }, () => console.error("Bild nicht gefunden: weiße Schoki.png"));
+}, () => loadFail("schoki-weiss.png"));
 
   for (let card of levelCards) {
     let el = new Image();
