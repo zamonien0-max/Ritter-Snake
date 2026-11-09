@@ -16,6 +16,9 @@ const minLoadingTime = 1500;   // Ladebildschirm mindestens 1,5 Sekunden zeigen 
 let transitionCard = -1;            // -1 = kein Übergang aktiv
 let transitionStart = 0;
 const transitionDuration = 700;     // in Millisekunden
+let swipeStartX = 0;
+let swipeStartY = 0;
+let gameOverTime = 0;
 
 function fitCanvas() {
   let s = min(windowWidth / 1080, windowHeight / 1920);
@@ -174,7 +177,7 @@ function draw() {
     return;
   }
 
-    if (gameOver && gameOverTime === 0) gameOverTime = millis();
+  if (gameOver && gameOverTime === 0) gameOverTime = millis();
   if (!gameOver) {
     handleControls();
     moveSnake();
@@ -485,6 +488,7 @@ function hitTest(px, py, b) {
 function backToMenu() {
   gameStarted = false;
   gameOver = false;
+  gameOverTime = 0;
   particles = [];
 }
 
@@ -860,6 +864,7 @@ function restartGame() {
   snakeLength = 3;
   score = 0;
   gameOver = false;
+  gameOverTime = 0;
   moveCounter = 0;
   particles = [];
 
