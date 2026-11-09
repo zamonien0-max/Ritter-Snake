@@ -1,3 +1,10 @@
+window.addEventListener("error", e => {
+  let d = document.createElement("div");
+  d.style.cssText = "position:fixed;left:0;top:0;right:0;background:#900;color:#fff;font:16px monospace;padding:8px;z-index:9999";
+  d.textContent = e.message + " (Zeile " + e.lineno + ")";
+  document.body.appendChild(d);
+});
+
 let selectedFlavor = "knusperflakes";
 let levelImagesLoaded = 0;
 let iconFile = "icon.svg";   // <- hier deinen Dateinamen eintragen
@@ -87,6 +94,7 @@ let score = 0;
 
 function setup() {
   createCanvas(1080, 1920);
+    setupTouchInput();
 
 let swipeStartX = 0;
 let swipeStartY = 0;
@@ -379,23 +387,35 @@ function handleTap(px, py) {
 }
 
 
-function mousePressed() {
-  handleTap(mouseX, mouseY);
-}
+function setupTouchInput() {
+  let c = document.querySelector("canvas");
+  c.style.touchAction = "none";
 
-function touchStarted() {
-  if (touches.length > 0) {
-    swipeStartX = touches[0].x;
-    swipeStartY = touches[0].y;
-    handleTap(touches[0].x, touches[0].y);
+  // Bildschirm-Koordinaten in Canvas-Koordinaten umrechnen
+  function toCanvas(e) {
+    let r = c.getBoundingClientRect();
+    return {
+      x: (e.clientX - r.left) * (width / r.width),
+      y: (e.clientY - r.top) * (height / r.height)
+    };
   }
-  return false;
-}
 
-function touchMoved() {
-  if (gameStarted && !gameOver && touches.length > 0) {
-    let dx = touches[0].x - swipeStartX;
-    let dy = touches[0].y - swipeStartY;
+  c.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    let p = toCanvas(e);
+    swipeStartX = p.x;
+    swipeStartY = p.y;
+    handleTap(p.x, p.y);
+  });
+
+  c.addEventListener("pointermove", e => {
+    e.preventDefault();
+    if (e.buttons === 0) return;                       // Finger/Maus nicht gedrückt
+    if (!gameStarted || gameOver || !direction) return;
+
+    let p = toCanvas(e);
+    let dx = p.x - swipeStartX;
+    let dy = p.y - swipeStartY;
 
     if (max(abs(dx), abs(dy)) > 40) {
       if (abs(dx) > abs(dy)) {
@@ -405,12 +425,10 @@ function touchMoved() {
         if (dy > 0 && direction.y !== -1) nextDirection = createVector(0, 1);
         else if (dy < 0 && direction.y !== 1) nextDirection = createVector(0, -1);
       }
-      // Neuer Startpunkt, damit mehrere Wischer hintereinander gehen
-      swipeStartX = touches[0].x;
-      swipeStartY = touches[0].y;
+      swipeStartX = p.x;
+      swipeStartY = p.y;
     }
-  }
-  return false;
+  });
 }
 
 function drawScore() {
