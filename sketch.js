@@ -496,9 +496,15 @@ function drawGameOver() {
   noStroke();
   rect(0, 0, width, height);
 
-  drawText("GAME OVER", width / 2, height / 2 - 70, 64, BOLD);
-  drawText("Punkte: " + score, width / 2, height / 2, 32, NORMAL);
-  drawText("TIPPE ZUM NEUSTARTEN", width / 2, height / 2 + 70, 26, NORMAL);
+  // Levelfarbe der gewählten Sorte
+  let levelColor = flavorSettings[selectedFlavor].body;
+
+  // GAME OVER als Zweizeiler, riesig
+  drawText("GAME", width / 2, height / 2 - 330, 300, BOLD, levelColor);
+  drawText("OVER", width / 2, height / 2 - 90, 300, BOLD, levelColor);
+
+  drawText("Punkte: " + score, width / 2, height / 2 + 80, 48, BOLD, "#ffffff");
+  drawText("TIPPE ZUM NEUSTARTEN", width / 2, height / 2 + 160, 32, NORMAL, "#ffffff");
 
   // Button: Zur Sortenauswahl
   let b = getMenuButtonBounds();
@@ -511,7 +517,7 @@ function drawGameOver() {
 function getMenuButtonBounds() {
   let w = 600;
   let h = 100;
-  return { x: (width - w) / 2, y: height / 2 + 140, w: w, h: h };
+  return { x: (width - w) / 2, y: height / 2 + 260, w: w, h: h };
 }
 
 function getIconBounds() {
