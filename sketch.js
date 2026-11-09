@@ -19,6 +19,7 @@ const transitionDuration = 700;     // in Millisekunden
 let swipeStartX = 0;
 let swipeStartY = 0;
 let gameOverTime = 0;
+let paused = false;
 
 function fitCanvas() {
   let s = min(windowWidth / 1080, windowHeight / 1920);
@@ -45,6 +46,25 @@ const flavorSettings = {
 // ------------------------------------
 
 const gameFont = "futura-pt";
+
+function getPauseButtonBounds() {
+  return {
+    x: width - 2000,
+    y: (headerH - 60) / 2,
+    w: 60,
+    h: 60
+  };
+}
+
+function drawPauseButton() {
+  let b = getPauseButtonBounds();
+
+  fill("#ffffff");
+  noStroke();
+
+  rect(b.x, b.y, 12, b.h, 4);
+  rect(b.x + 26, b.y, 12, b.h, 4);
+}
 
 function drawText(content, x, y, size, weight = NORMAL, color = "#ffffff", align = CENTER) {
   push();
@@ -82,10 +102,10 @@ const cols = 18;
 const rows = 32;
 const gridSize = 50;
 const fieldX = 90;
-const fieldY = 260;
+const headerH = 120;
+const fieldY = headerH;
 const fieldW = cols * gridSize; // 900 px
 const fieldH = rows * gridSize; // 1600 px
-const headerH = 100;
 
 let direction;
 let nextDirection;
@@ -182,10 +202,10 @@ function draw() {
   }
 
   if (gameOver && gameOverTime === 0) gameOverTime = millis();
-  if (!gameOver) {
-    handleControls();
-    moveSnake();
-  }
+ if (!gameOver && !paused) {
+  handleControls();
+  moveSnake();
+}
 
   drawGameFrame();
   drawFood();
@@ -197,6 +217,7 @@ function draw() {
     drawGameOver();
   }
     drawBackIcon();
+    drawPauseButton();
 }
 
 // ------------------------------------
@@ -285,6 +306,7 @@ function drawLevelMenu() {
   // Splitter über den Karten
   drawChocolateParticles();
 }
+
 
 function createCardParticles(b) {
   let style = flavorSettings[selectedFlavor];
@@ -384,6 +406,11 @@ function handleTap(px, py) {
     return;
   }
 
+  if (hitTest(px, py, getPauseButtonBounds())) {
+  paused = !paused;
+  return;
+}
+
     // Game Over: Button zur Sortenauswahl, sonst Tippen = Neustart
   if (gameOver) {
     if (hitTest(px, py, getMenuButtonBounds())) {
@@ -439,10 +466,27 @@ function setupTouchInput() {
   });
 }
 
+function drawGameFrame() {
+  const style = flavorSettings[selectedFlavor];
+
+  // Nur Header
+  noStroke();
+  fill(style.body);
+  rect(0, 0, width, headerH);
+}
 
 function drawScore() {
   // Der obere Balken ist Teil derselben farbigen Außenfläche.
   drawText("Punkte: " + score, 30, headerH / 2, 48, BOLD, "#ffffff", LEFT);
+  if (paused) {
+  drawText(
+    "PAUSE",
+    width / 2,
+    headerH / 2,
+    42,
+    BOLD,
+    "#ffffff"
+  );
 }
 
 function drawGameOver() {
