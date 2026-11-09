@@ -107,12 +107,26 @@ let score = 0;
 
 function setup() {
   createCanvas(1080, 1920);
+  function setup() {
+  createCanvas(1080, 1920);
+
+  fitCanvas();
+  setupTouchInput();
+
+  frameRate(30);
     setupTouchInput();
 
-let swipeStartX = 0;
-let swipeStartY = 0;
-let gameOverTime = 0;
-  
+  const cols = 18;
+const rows = 32;
+const gridSize = 960 / cols;
+
+const fieldX = 60;
+const fieldY = 150;
+const fieldW = cols * gridSize;
+const fieldH = rows * gridSize;
+
+const headerH = 150;
+    
   frameRate(30);
   background("#24264f");
     loadingStartTime = millis();
@@ -448,12 +462,13 @@ function setupTouchInput() {
 function drawGameFrame() {
   const style = flavorSettings[selectedFlavor];
 
-  push();
-  noFill();
-  stroke(style.body);
-  strokeWeight(12);
-  rect(frameX, frameY, frameW, frameH);
-  pop();
+  // Eine einzige zusammenhängende Farbfläche
+  background(style.body);
+
+  // Dunkelblaues Spielfeld
+  noStroke();
+  fill("#24264f");
+  rect(fieldX, fieldY, fieldW, fieldH);
 }
 
 function drawScore() {
