@@ -77,18 +77,14 @@ let particles = [];
 let chocolateImages = [];
 let imagesLoaded = false;
 
-// Spielfeld: nach innen verschoben, damit oben Platz für den HUD-Balken bleibt
-const gridSize = 50;
+// Spielfeld-Koordinaten (global, damit alle Zeichenfunktionen darauf zugreifen können)
 const cols = 18;
 const rows = 32;
-
+const gridSize = 50;
 const fieldX = 90;
 const fieldY = 260;
-
-const frameX = 60;
-const frameY = 230;
-const frameW = 960;
-const frameH = 1660;
+const fieldW = cols * gridSize; // 900 px
+const fieldH = rows * gridSize; // 1600 px
 const headerH = 150;
 
 let direction;
@@ -107,55 +103,39 @@ let score = 0;
 
 function setup() {
   createCanvas(1080, 1920);
-  function setup() {
-  createCanvas(1080, 1920);
-
   fitCanvas();
   setupTouchInput();
 
   frameRate(30);
-    setupTouchInput();
-
-  const cols = 18;
-const rows = 32;
-const gridSize = 960 / cols;
-
-const fieldX = 60;
-const fieldY = 150;
-const fieldW = cols * gridSize;
-const fieldH = rows * gridSize;
-
-const headerH = 150;
-    
-  frameRate(30);
   background("#24264f");
-    loadingStartTime = millis();
-  
-   // Icon für den Zurück-Button laden
+  loadingStartTime = millis();
+
+  // Icon für den Zurück-Button laden
   let iconEl = new Image();
   iconEl.onload = () => { iconImage = iconEl; };
   iconEl.onerror = () => console.error("Bild nicht gefunden: " + iconFile);
   iconEl.src = iconFile;
 
   // Schokoladenbilder laden
-   loadImage("schoki-dunkel.png", img => {
+  loadImage("schoki-dunkel.png", img => {
     chocolateImages[0] = img;
     loadedAssets++;
     checkImagesLoaded();
-}, () => loadFail("schoki-dunkel.png"));
+  }, () => loadFail("schoki-dunkel.png"));
 
   loadImage("schoki-vollmilch.png", img => {
     chocolateImages[1] = img;
     loadedAssets++;
     checkImagesLoaded();
-}, () => loadFail("schoki-vollmilch.png"));
+  }, () => loadFail("schoki-vollmilch.png"));
 
   loadImage("schoki-weiss.png", img => {
     chocolateImages[2] = img;
     loadedAssets++;
     checkImagesLoaded();
-}, () => loadFail("schoki-weiss.png"));
+  }, () => loadFail("schoki-weiss.png"));
 
+  // Levelkarten laden
   for (let card of levelCards) {
     let el = new Image();
     el.onload = () => {
@@ -462,25 +442,16 @@ function setupTouchInput() {
 function drawGameFrame() {
   const style = flavorSettings[selectedFlavor];
 
-  // Eine einzige zusammenhängende Farbfläche
+  // Eine einzige, zusammenhängende farbige Fläche bis zu allen Canvas-Rändern.
+  // Der dunkle Spielbereich wird direkt hineingezeichnet – ohne separaten Rahmen.
   background(style.body);
-
-  // Dunkelblaues Spielfeld
   noStroke();
   fill("#24264f");
   rect(fieldX, fieldY, fieldW, fieldH);
 }
 
 function drawScore() {
-  const style = flavorSettings[selectedFlavor];
-
-  // Durchgehender Farbbalken über die gesamte Canvas-Breite
-  push();
-  noStroke();
-  fill(style.body);
-  rect(0, 0, width, headerH);
-  pop();
-
+  // Der obere Balken ist Teil derselben farbigen Außenfläche.
   drawText("Punkte: " + score, 30, headerH / 2, 48, BOLD, "#ffffff", LEFT);
 }
 
