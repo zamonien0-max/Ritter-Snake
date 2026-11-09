@@ -49,7 +49,7 @@ const gameFont = "futura-pt";
 
 function getPauseButtonBounds() {
   return {
-    x: width - 2000,
+    x: width - 170,
     y: (headerH - 60) / 2,
     w: 60,
     h: 60
@@ -488,6 +488,7 @@ function drawScore() {
     BOLD,
     "#ffffff"
   );
+ }
 }
 
 function drawGameOver() {
