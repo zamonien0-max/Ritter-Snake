@@ -376,6 +376,7 @@ function handleTap(px, py) {
       restartGame();
     }
   }
+}
 
 
 function mousePressed() {
