@@ -85,7 +85,7 @@ const fieldX = 90;
 const fieldY = 260;
 const fieldW = cols * gridSize; // 900 px
 const fieldH = rows * gridSize; // 1600 px
-const headerH = 150;
+const headerH = 100;
 
 let direction;
 let nextDirection;
@@ -439,16 +439,6 @@ function setupTouchInput() {
   });
 }
 
-function drawGameFrame() {
-  const style = flavorSettings[selectedFlavor];
-
-  // Eine einzige, zusammenhängende farbige Fläche bis zu allen Canvas-Rändern.
-  // Der dunkle Spielbereich wird direkt hineingezeichnet – ohne separaten Rahmen.
-  background(style.body);
-  noStroke();
-  fill("#24264f");
-  rect(fieldX, fieldY, fieldW, fieldH);
-}
 
 function drawScore() {
   // Der obere Balken ist Teil derselben farbigen Außenfläche.
